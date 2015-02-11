@@ -94,8 +94,8 @@ A quoted expression is translated to an array.
 Both `nil` and `()` are translated to `nil`.
 Cons cells and lists are translated to arrays.
 
-| type             | S-exp (input)       | Ruby (output)        |
-|------------------+---------------------+---------------------|
+| type             | S-exp (input)       | Ruby (output)       |
+|------------------|---------------------|---------------------|
 | integer          | `1`                 | `1`                 |
 | float            | `1.2`               | `1.2`               |
 | float            | `1e4`               | `1e4`               |
@@ -122,7 +122,7 @@ such S-expressions with creating instances of `SExpCons` and
 `SExpQuoted` directly and calling the `to_s` method.
 
 | type       | Ruby (input)                             | S-exp (output)               |
-|------------+------------------------------------------+------------------------------|
+|------------|------------------------------------------|------------------------------|
 | primitive  | `[1,1.2,-4,"xxx",:www,true,nil]`         | `(1 1.2 -4 "xxx" www t nil)` |
 | empty list | `[]`                                     | `nil`                        |
 | nest list  | `[1,[2,[3,4]]]`                          | `(1 (2 (3 4)))`              |
