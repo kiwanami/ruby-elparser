@@ -68,9 +68,15 @@ class TestElparser < Test::Unit::TestCase
            })
       def test_primitive(data)
         src, expected = data
-        assert_equal expected, @parser.parse(src)
+        assert_equal expected, @parser.parse1(src)
       end
     
+    end
+
+    test "Multiple S-exp" do
+      src = "(1 2) (3 4)"
+      exp = [_list(_int(1),_int(2)),_list(_int(3),_int(4))]
+      assert_equal exp, @parser.parse(src)
     end
 
     sub_test_case "List Structure" do
@@ -89,7 +95,7 @@ class TestElparser < Test::Unit::TestCase
            })
       def test_list(data)
         src, expected = data
-        assert_equal expected, @parser.parse(src)
+        assert_equal expected, @parser.parse1(src)
       end
       
     end
@@ -97,13 +103,13 @@ class TestElparser < Test::Unit::TestCase
     sub_test_case "Cons and List operation" do
       
       def test_cons1
-        v = @parser.parse("(1 . 2)")
+        v = @parser.parse1("(1 . 2)")
         assert_equal _int(1), v.car
         assert_equal _int(2), v.cdr
       end
 
       def test_list1
-        v = @parser.parse("(1 2 3)")
+        v = @parser.parse1("(1 2 3)")
         assert_equal _int(1), v.car
         assert_equal _int(2), v.cdr.car
         assert_equal _int(3), v.cdr.cdr.car
@@ -111,14 +117,14 @@ class TestElparser < Test::Unit::TestCase
       end
 
       def test_dotlist
-        v = @parser.parse("(1 2 . 3)")
+        v = @parser.parse1("(1 2 . 3)")
         assert_equal _int(1), v.car
         assert_equal _int(2), v.cdr.car
         assert_equal _int(3), v.cdr.cdr
       end
 
       def test_ruby_object
-        v = @parser.parse("(1 2.1 \"xxx\" www)")
+        v = @parser.parse1("(1 2.1 \"xxx\" www)")
         ro = v.to_ruby
         assert_equal ro.size, 4
         assert_equal ro[0], 1
@@ -126,7 +132,7 @@ class TestElparser < Test::Unit::TestCase
         assert_equal ro[2], "xxx"
         assert_equal ro[3], :www
 
-        v = @parser.parse("(1 (2 3 (4)))")
+        v = @parser.parse1("(1 (2 3 (4)))")
         ro = v.to_ruby
         assert_equal ro.size, 2
         assert_equal ro[0], 1
@@ -136,7 +142,7 @@ class TestElparser < Test::Unit::TestCase
       end
 
       def test_alist
-        v = @parser.parse("( (a . 1) (b . \"xxx\") (c 3 4) (\"d\" . \"e\"))")
+        v = @parser.parse1("( (a . 1) (b . \"xxx\") (c 3 4) (\"d\" . \"e\"))")
         assert_true v.alist?
         hash = v.to_h
         assert_equal hash[:a], 1
@@ -144,9 +150,9 @@ class TestElparser < Test::Unit::TestCase
         assert_equal hash[:c], [3,4]
         assert_equal hash["d"], "e"
 
-        v = @parser.parse("((a . 1) (b))")
+        v = @parser.parse1("((a . 1) (b))")
         assert_true v.alist?
-        v = @parser.parse("((a . 1) b)")
+        v = @parser.parse1("((a . 1) b)")
         assert_false v.alist?
       end
 
@@ -167,6 +173,19 @@ class TestElparser < Test::Unit::TestCase
     def test_encode(data)
       src, expected = data
       assert_equal(expected, Elparser.encode(src))
+    end
+
+    def test_multiple_lines
+      src = [
+             [:defvar, :abc, 1, "var doc"],
+             [:defun, :cdef, [:'&optional', :a, :b],
+              [:interactive],
+              [:message, "hello world"],
+             ],
+            ]
+      exp = "(defvar abc 1 \"var doc\")
+(defun cdef (&optional a b) (interactive) (message \"hello world\"))"
+      assert_equal(exp, Elparser.encode_multi(src))
     end
 
   end

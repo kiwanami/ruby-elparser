@@ -219,6 +219,11 @@ module Elparser
   # parser class for 
   class Parser
 
+    # parse s-expression string and return one sexp object.
+    def parse1(str)
+      parse(str)[0]
+    end
+
     # parse s-expression string and return sexp objects.
     def parse(str)
       s = StringScanner.new str
@@ -236,7 +241,9 @@ module Elparser
       end
       @tokens.push [false, '$end']
       
-      normalize do_parse
+      return do_parse.map do |i|
+        normalize(i)
+      end
     end
 
     def next_token
@@ -262,9 +269,15 @@ module Elparser
   end
 
   
-  # translate ruby objects to s-expression string.
-  def self.encode(arg)
-    return _encode(arg).to_s
+  # Translate a ruby object to s-expression string.
+  def self.encode(obj)
+    return _encode(obj).to_s
+  end
+
+  # Translate many ruby objects to s-expression string.
+  # The result s-exps are concatenated into one string.
+  def self.encode_multi(objs, sep = "\n")
+    return objs.map {|obj| _encode(obj).to_s }.join(sep)
   end
 
   private 

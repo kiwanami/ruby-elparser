@@ -1,9 +1,9 @@
 class Elparser::Parser
 
 rule
-   target: sexp {}
+   target: sexp_seq
    
-   sexp: nil | val | cons | symbol | string | list | quoted;
+   sexp: nil | val | cons | symbol | string | list | quoted
    
    sexp_seq: sexp { result = [val[0]] }
            | sexp_seq sexp { result << val[1] }

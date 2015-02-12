@@ -12,7 +12,7 @@ require 'elparser'
 parser = Elparser::Parser.new
 
  # list and literals
-obj1 = parser.parse("(1 2.3 a \"b\" () (c 'd))")
+obj1 = parser.parse1("(1 2.3 a \"b\" () (c 'd))")
 
 p obj1.to_ruby
  # => [1, 2.3, :a, "b", nil, [:c, [:d]]]
@@ -61,11 +61,13 @@ Or install it yourself as:
 
 The class `Elparser::Parser` is parser for emacs-lisp S-expression.
 The user program creates an instance of the class and parses the S-exp
-string with `parse` method.
+string with `parse1` method. If the source string has multiple
+S-expressions, one can use `parse` method.
 
-If the `parse` method succeed in parsing the given S-exp string, it
-returns a `SExp` object which is AST of S-exp. Invoking `to_ruby`
-method of the `SExp` object, one can obtain a ruby object.
+If the `Parser#parse1` method succeed in parsing the given S-exp
+string, it returns a `SExp` object which is AST of S-exp. Invoking
+`to_ruby` method of the `SExp` object, one can obtain a ruby object.
+`Parser#parse` method returns an array of `SExp` objects.
 
 The `SExp` objects are instances of `SExpXXX` classes: `SExpNumber`,
 `SExpString`, `SExpSymbol`, `SExpNil`, `SExpCons`, `SExpList`,
@@ -78,7 +80,9 @@ a `Hash` object can be obtained.
 ### Encoder
 
 The module method `Elparser::encode` encodes the ruby objects into
-elisp S-expressions.
+elisp S-expressions. The another method `Elparser::encode_multi`
+receives an array of ruby objects and returns a S-expression string in
+which multiple S-expressions are concatenated.
 
 If an object which is not defined in serialization rules is given,
 this method raises the exception `StandardError` with some messages.
@@ -129,3 +133,7 @@ such S-expressions with creating instances of `SExpCons` and
 | hash       | `{"a" => "b", "c" => "d"}`               | `(("a" . "b") ("c" . "d"))`  |
 | hash       | `{:a => [1,2,3], :b => {:c => [4,5,6]}}` | `((a 1 2 3) (b (c 4 5 6)))`  |
 
+## License
+
+Copyright (c) 2015 SAKURAI Masashi
+Released under the MIT license
