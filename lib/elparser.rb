@@ -216,6 +216,15 @@ module Elparser
     end
   end
 
+  class ParserError < StandardError
+    attr_reader :message, :pos, :sample
+    def initialize(message, pos, sample)
+      @message = message
+      @pos = pos
+      @sample = sample
+    end
+  end
+
   # parser class for 
   class Parser
 
@@ -226,6 +235,10 @@ module Elparser
 
     # parse s-expression string and return sexp objects.
     def parse(str)
+      if str.nil? || str == ""
+        raise ParserError.new("Empty input",0,"")
+      end
+
       s = StringScanner.new str
       @tokens = []
 
@@ -237,10 +250,10 @@ module Elparser
           s.scan(/\A[a-z\-.\/_:*+=$][a-z\-.\/_:$*+=0-9]*/i) ? (@tokens << [:SYMBOL, s.matched]) :
           s.scan(/\A"(([^\\"]|\\.)*)"/)        ? (@tokens << [:STRING, s.matched.slice(1...-1)])  :
           s.scan(/\A./)                      ? (a = s.matched; @tokens << [a, a]) :
-          (raise "scanner error")
+          (raise ParserError.new("Scanner error",s.pos,s.peek(5)))
       end
-      @tokens.push [false, '$end']
-      
+      @tokens.push [false, 'END']
+
       return do_parse.map do |i|
         normalize(i)
       end
@@ -280,6 +293,17 @@ module Elparser
     return objs.map {|obj| _encode(obj).to_s }.join(sep)
   end
 
+  class EncodingError < StandardError
+    attr_reader :message, :object
+    def initialize(message, object)
+      @message = message
+      @object = object
+    end
+    def to_s
+      @message
+    end
+  end
+
   private 
 
   def self._encode(arg)
@@ -302,7 +326,7 @@ module Elparser
     elsif c ==  FalseClass then
       return SExpNil.new
     end
-    raise "Can't encode object : #{arg}"
+    raise EncodingError.new("Can't encode object : #{arg}", arg)
   end
 
   def self._encode_array(arg)

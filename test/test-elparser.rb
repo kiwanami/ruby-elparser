@@ -190,4 +190,26 @@ class TestElparser < Test::Unit::TestCase
 
   end
 
+  sub_test_case "Error" do
+
+    test "Parser Error" do
+      assert_raise_message "Empty input" do
+        @parser.parse ""
+      end
+      assert_raise_message /\$end/ do
+        @parser.parse "("
+      end
+      assert_raise_message /parse error on value "\)"/ do
+        @parser.parse ")"
+      end
+    end
+
+    test "Encoding Error" do
+      assert_raise_message /Can\'t encode object/ do
+        Elparser.encode Class
+      end
+    end
+
+  end
+
 end
