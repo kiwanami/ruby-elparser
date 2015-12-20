@@ -10,23 +10,23 @@ module Elparser
 ##### State transition tables begin ###
 
 racc_action_table = [
-    11,    22,    12,    13,    17,    14,    15,    16,    11,    26,
-    12,    13,   nil,    14,    15,    16,    11,   nil,    12,    13,
-   nil,    14,    15,    16,    11,    20,    12,    13,   nil,    14,
+    11,    17,    12,    13,    22,    14,    15,    16,    11,    26,
+    12,    13,   nil,    14,    15,    16,    11,    20,    12,    13,
+   nil,    14,    15,    16,    11,   nil,    12,    13,   nil,    14,
     15,    16,    11,    24,    12,    13,    23,    14,    15,    16,
     11,   nil,    12,    13,   nil,    14,    15,    16 ]
 
 racc_action_check = [
-     0,    17,     0,     0,     1,     0,     0,     0,    23,    25,
-    23,    23,   nil,    23,    23,    23,     2,   nil,     2,     2,
-   nil,     2,     2,     2,    11,    11,    11,    11,   nil,    11,
-    11,    11,    19,    19,    19,    19,    19,    19,    19,    19,
-    14,   nil,    14,    14,   nil,    14,    14,    14 ]
+     0,     1,     0,     0,    17,     0,     0,     0,     2,    25,
+     2,     2,   nil,     2,     2,     2,    11,    11,    11,    11,
+   nil,    11,    11,    11,    14,   nil,    14,    14,   nil,    14,
+    14,    14,    19,    19,    19,    19,    19,    19,    19,    19,
+    23,   nil,    23,    23,   nil,    23,    23,    23 ]
 
 racc_action_pointer = [
-    -2,     4,    14,   nil,   nil,   nil,   nil,   nil,   nil,   nil,
-   nil,    22,   nil,   nil,    38,   nil,   nil,     1,   nil,    30,
-   nil,   nil,   nil,     6,   nil,     6,   nil ]
+    -2,     1,     6,   nil,   nil,   nil,   nil,   nil,   nil,   nil,
+   nil,    14,   nil,   nil,    22,   nil,   nil,     4,   nil,    30,
+   nil,   nil,   nil,    38,   nil,     6,   nil ]
 
 racc_action_default = [
    -19,   -19,    -1,    -2,    -3,    -4,    -5,    -6,    -7,    -8,

@@ -61,6 +61,7 @@ class TestElparser < Test::Unit::TestCase
          'float exp-'   => ['1.4e-5', _float("1.4e-5")],
          'symbol'       => ['abc', _symbol('abc')],
          'symbol2'      => ['$sf-/p.post', _symbol('$sf-/p.post')],
+         'symbol3'      => ['#<buffer*GNUEmacs*>', _symbol('#<buffer*GNUEmacs*>')],
          'string'       => ['"qwert"', _string("qwert")],
          'string2'      => ['"abc\"dds\"dfff\'123\' \\n\nok?"', _string('abc\"dds\"dfff\'123\' \\n\nok?')],
          'quote'        => ['\'symbol', _q(_symbol('symbol'))],

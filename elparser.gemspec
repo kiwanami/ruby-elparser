@@ -19,8 +19,8 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
   spec.extra_rdoc_files = ['readme.html']
 
-  spec.add_runtime_dependency "racc", "~> 1.4"
-  spec.add_development_dependency "bundler", "~> 1.7"
+  spec.add_runtime_dependency "racc", "~> 1"
+  spec.add_development_dependency "bundler", "~> 1"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "test-unit", "~> 3.0"
 end

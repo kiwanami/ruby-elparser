@@ -247,7 +247,7 @@ module Elparser
           s.scan(/\A[-+]?[0-9]*\.[0-9]+(e[-+]?[0-9]+)?/i) ? (@tokens << [:FLOAT, s.matched]) :
           s.scan(/\A[-+]?(0|[1-9]\d*)/)      ? (@tokens << [:INTEGER, s.matched]) :
           s.scan(/\A\.(?=\s)/)               ? (@tokens << ['.', '.']) :
-          s.scan(/\A[a-z\-.\/_:*+=$][a-z\-.\/_:$*+=0-9]*/i) ? (@tokens << [:SYMBOL, s.matched]) :
+          s.scan(/\A[a-z\-.\/_:*<>+=$#][a-z\-.\/_:$*<>+=0-9]*/i) ? (@tokens << [:SYMBOL, s.matched]) :
           s.scan(/\A"(([^\\"]|\\.)*)"/)        ? (@tokens << [:STRING, s.matched.slice(1...-1)])  :
           s.scan(/\A./)                      ? (a = s.matched; @tokens << [a, a]) :
           (raise ParserError.new("Scanner error",s.pos,s.peek(5)))
