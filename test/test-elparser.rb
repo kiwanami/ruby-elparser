@@ -63,12 +63,17 @@ class TestElparser < Test::Unit::TestCase
          'symbol2'      => ['$sf-/p.post', _symbol('$sf-/p.post')],
          'symbol3'      => ['#<buffer*GNUEmacs*>', _symbol('#<buffer*GNUEmacs*>')],
          'string'       => ['"qwert"', _string("qwert")],
-         'string2'      => ['"abc\"dds\"dfff\'123\' \\n\nok?"', _string('abc\"dds\"dfff\'123\' \\n\nok?')],
+         'string-quote' => ["\"\\\"\"", _string("\"")],
+         'string-quote2'=> ["\"abc\\\"dds\\\"dfff\'123\' \\\\n\\nok?\"", _string("abc\"dds\"dfff\'123\' \\n\nok?")],
+         'string-unicode1' => ["\"\\u{2026}\"", _string("\u{2026}")],
+         'string-unicode2' => ["\"\\\\u{2026}\"", _string("\\u{2026}")],
+         'string-unicode3' => ["\"\\u2026\"", _string("\u2026")],
          'quote'        => ['\'symbol', _q(_symbol('symbol'))],
          'nil'          => ['nil', _nil],
            })
       def test_primitive(data)
         src, expected = data
+        #puts src,expected
         assert_equal expected, @parser.parse1(src)
       end
     

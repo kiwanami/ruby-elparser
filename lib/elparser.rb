@@ -248,7 +248,7 @@ module Elparser
           s.scan(/\A[-+]?(0|[1-9]\d*)/)      ? (@tokens << [:INTEGER, s.matched]) :
           s.scan(/\A\.(?=\s)/)               ? (@tokens << ['.', '.']) :
           s.scan(/\A[a-z\-.\/_:*<>+=$#][a-z\-.\/_:$*<>+=0-9]*/i) ? (@tokens << [:SYMBOL, s.matched]) :
-          s.scan(/\A"(([^\\"]|\\.)*)"/)        ? (@tokens << [:STRING, s.matched.slice(1...-1)])  :
+          s.scan(/\A"(([^\\"]|\\.)*)"/)        ? (@tokens << [:STRING, _unescape_string(s.matched.slice(1...-1))])  :
           s.scan(/\A./)                      ? (a = s.matched; @tokens << [a, a]) :
           (raise ParserError.new("Scanner error",s.pos,s.peek(5)))
       end
@@ -256,6 +256,28 @@ module Elparser
 
       return do_parse.map do |i|
         normalize(i)
+      end
+    end
+
+    UNESCAPES = {
+      'a' => "\x07", 'b' => "\x08", 't' => "\x09",
+      'n' => "\x0a", 'v' => "\x0b", 'f' => "\x0c",
+      'r' => "\x0d", 'e' => "\x1b", "\\\\" => "\x5c",
+      "\"" => "\x22", "'" => "\x27"
+    }
+    UNESCAPES_REGEX = /\\(?:([#{UNESCAPES.keys.join}])|u([\da-fA-F]{4})|u\{([\da-fA-F]{1,6})\})|\\0?x([\da-fA-F]{2})/
+
+    def _unescape_string(str)
+      return str.gsub(UNESCAPES_REGEX) do
+        if $1
+          if $1 == '\\' then '\\' else UNESCAPES[$1] end
+        elsif $2 # escape \u0000 unicode
+          ["#$2".hex].pack('U*')
+        elsif $3 # escape \u{0000} unicode
+          ["#$3".hex].pack('U*')
+        elsif $4 # escape \0xff or \xff
+          [$4].pack('H2')
+        end
       end
     end
 
