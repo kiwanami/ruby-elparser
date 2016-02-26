@@ -1,4 +1,4 @@
-require "elparser/version"
+require 'elparser/version'
 require 'elparser/parser.tab.rb'
 require 'strscan'
 
@@ -65,7 +65,15 @@ module Elparser
       @str = str
     end
     def to_s
-      @str.dump
+      # replace unicode point escape syntax : \u{xxxx} -> \uxxxx, \u{yyyyy} -> \U000yyyyy
+      @str.dump.gsub(/\\u\{(\h{4,6})\}/) do |m|
+        i = $1
+        if i.size == 4 then
+          "\\u#{i}"
+        else
+          "\\U00%06x"%(i.hex)
+        end
+      end
     end
     def to_ruby
       @str

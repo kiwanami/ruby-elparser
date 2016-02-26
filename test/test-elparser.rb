@@ -175,6 +175,8 @@ class TestElparser < Test::Unit::TestCase
        "nested list" => [[1,[2,[3,4]]], "(1 (2 (3 4)))"],
        "hash1" => [{"a" => "b", "c" => "d"}, "((\"a\" . \"b\") (\"c\" . \"d\"))"],
        "hash2" => [{:a => [1,2,3], :b => {:c => [4,5,6]}}, "((a 1 2 3) (b (c 4 5 6)))"],
+       "unicode1" => ["unicode \u{2026}\u{2027} normal", "\"unicode \\u2026\\u2027 normal\""],
+       "unicode2" => ["unicode \u{1f607} emoji", "\"unicode \\U0001f607 emoji\""],
     })
     def test_encode(data)
       src, expected = data
