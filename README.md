@@ -19,7 +19,7 @@ p obj1.to_ruby
 
 
  # alist and hash
-obj2 = parser.parse("( (a . 1) (b . \"xxx\") (c 3 4) (\"d\" . \"e\"))")
+obj2 = parser.parse1("( (a . 1) (b . \"xxx\") (c 3 4) (\"d\" . \"e\"))")
 
 p obj2.to_ruby
  # => [[:a, 1], [:b, "xxx"], [:c, 3, 4], ["d", "e"]] 
